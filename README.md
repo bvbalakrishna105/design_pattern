@@ -1,4 +1,4 @@
-# design_pattern
+# Design Principles
 
 Single Responsibility Principle (SRP):
 This principle states that a class should have only one reason to change, meaning it should have only one responsibility. In other words, a class should have only one job or function and should not be responsible for multiple unrelated tasks. This helps to keep classes focused, easier to understand, and more maintainable.
