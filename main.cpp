@@ -1,4 +1,6 @@
 #include <iostream>
+#include <vector>
+#include <algorithm>
 
 class Singleton {
 private:
@@ -39,7 +41,86 @@ void exampleSingleTon() {
     std::cout << "Address of singleton2: " << singleton2 << std::endl;
 }
 
+// Forward declaration of the Observer interface
+class Observer;
+
+// Subject interface
+class Subject {
+public:
+    virtual void attach(Observer* observer) = 0;
+    virtual void detach(Observer* observer) = 0;
+    virtual void notify() = 0;
+};
+
+// Observer interface
+class Observer {
+public:
+    virtual void update() = 0;
+};
+
+// Concrete Subject class
+class ConcreteSubject : public Subject {
+private:
+    std::vector<Observer*> observers;
+    int state;
+
+public:
+    void attach(Observer* observer) override {
+        observers.push_back(observer);
+    }
+
+    void detach(Observer* observer) override {
+        observers.erase(std::remove(observers.begin(), observers.end(), observer), observers.end());
+    }
+
+    void notify() override {
+        for (Observer* observer : observers) {
+            observer->update();
+        }
+    }
+
+    void setState(int newState) {
+        state = newState;
+        notify();
+    }
+
+    int getState() const {
+        return state;
+    }
+};
+
+// Concrete Observer class
+class ConcreteObserver : public Observer {
+private:
+    ConcreteSubject* subject;
+
+public:
+    ConcreteObserver(ConcreteSubject* subj) : subject(subj) {
+        subject->attach(this);
+    }
+
+    ~ConcreteObserver() {
+        subject->detach(this);
+    }
+
+    void update() override {
+        std::cout << "Observer received update. New state: " << subject->getState() << std::endl;
+    }
+};
+
+
+void exampleObserver() {
+    ConcreteSubject subject;
+    ConcreteObserver observer1(&subject);
+    ConcreteObserver observer2(&subject);
+
+    subject.setState(10);
+    subject.setState(20);
+
+}
+
 int main() {
     exampleSingleTon();
+    exampleObserver();
     return 0;
 }
