@@ -119,8 +119,104 @@ void exampleObserver() {
 
 }
 
+// Abstract Product A
+class AbstractProductA {
+public:
+    virtual void use() = 0;
+};
+
+// Concrete Product A1
+class ConcreteProductA1 : public AbstractProductA {
+public:
+    void use() override {
+        std::cout << "Using ConcreteProductA1\n";
+    }
+};
+
+// Concrete Product A2
+class ConcreteProductA2 : public AbstractProductA {
+public:
+    void use() override {
+        std::cout << "Using ConcreteProductA2\n";
+    }
+};
+
+// Abstract Product B
+class AbstractProductB {
+public:
+    virtual void consume() = 0;
+};
+
+// Concrete Product B1
+class ConcreteProductB1 : public AbstractProductB {
+public:
+    void consume() override {
+        std::cout << "Consuming ConcreteProductB1\n";
+    }
+};
+
+// Concrete Product B2
+class ConcreteProductB2 : public AbstractProductB {
+public:
+    void consume() override {
+        std::cout << "Consuming ConcreteProductB2\n";
+    }
+};
+
+// Abstract Factory
+class AbstractFactory {
+public:
+    virtual AbstractProductA* createProductA() = 0;
+    virtual AbstractProductB* createProductB() = 0;
+};
+
+// Concrete Factory 1
+class ConcreteFactory1 : public AbstractFactory {
+public:
+    AbstractProductA* createProductA() override {
+        return new ConcreteProductA1();
+    }
+
+    AbstractProductB* createProductB() override {
+        return new ConcreteProductB1();
+    }
+};
+
+// Concrete Factory 2
+class ConcreteFactory2 : public AbstractFactory {
+public:
+    AbstractProductA* createProductA() override {
+        return new ConcreteProductA2();
+    }
+
+    AbstractProductB* createProductB() override {
+        return new ConcreteProductB2();
+    }
+};
+
+void exampleAbstractFactory() {
+
+    // Create a factory object (choose the type of factory you need)
+    AbstractFactory* factory = new ConcreteFactory1(); // Or ConcreteFactory2
+
+    // Create products using the factory
+    AbstractProductA* productA = factory->createProductA();
+    AbstractProductB* productB = factory->createProductB();
+
+    // Use or consume the products
+    productA->use();
+    productB->consume();
+
+    // Clean up
+    delete productA;
+    delete productB;
+    delete factory;
+
+}
+
 int main() {
     exampleSingleTon();
     exampleObserver();
+    exampleAbstractFactory();
     return 0;
 }
